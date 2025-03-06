@@ -40,7 +40,7 @@ class PublicRecipeAPITests(TestCase):
         """Test auth is required to call API"""
         res = self.client.get(RECIPES_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_401_unauthorized)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PrivateRecipeAPITests(TestCase):
     """Test authenticated API requests"""
