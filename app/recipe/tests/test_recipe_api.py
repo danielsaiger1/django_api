@@ -37,8 +37,9 @@ def test_create_recipe(user, **params):
     }
     defaults.update(params)
 
-    recipe = Recipe.objects.create(user=user,**defaults)
+    recipe = Recipe.objects.create(user=user, **defaults)
     return recipe
+
 
 class PublicRecipeAPITests(TestCase):
     """test unauthenticated api requests"""
@@ -50,6 +51,7 @@ class PublicRecipeAPITests(TestCase):
         res = self.client.get(RECIPES_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class PrivateRecipeAPITests(TestCase):
     """Test authenticated API requests"""
@@ -90,11 +92,11 @@ class PrivateRecipeAPITests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_get_recipe_detail(self):
-        """Test getting a recipe detail"""
+        """Test get recipe detail."""
         recipe = test_create_recipe(user=self.user)
 
         url = detail_url(recipe.id)
         res = self.client.get(url)
 
-        serializer = RecipeDetailSerializer
+        serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
