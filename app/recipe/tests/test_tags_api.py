@@ -31,7 +31,7 @@ class PublicTagsAPITests(TestCase):
         """Test auth is required for retrieving tags"""
         res = self.client.get(TAGS_URL)
 
-        self.asserEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class PrivateTagsAPITests(TestCase):
@@ -56,11 +56,11 @@ class PrivateTagsAPITests(TestCase):
     
     def test_tags_limited_to_user(self):
         """Test list of tags is limited to authenticated user"""
-        other_user = create_user(emaiL='user2@example.com', password='pass123')
+        other_user = create_user(email='user2@example.com')
 
         Tag.objects.create(user=self.user, name='SampleTag')
         Tag.objects.create(user=other_user, name='SampleTag2')
-        tag = Tag.objects.filter(user=self.user)
+        tag = Tag.objects.get(user=self.user)
 
         res = self.client.get(TAGS_URL)
         
