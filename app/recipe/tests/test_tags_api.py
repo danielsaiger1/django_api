@@ -21,6 +21,7 @@ def create_user(email='user@example.com', password='test123'):
         password=password
     )
 
+
 def detail_url(tag_id):
     """Create and return a tag detail url"""
     return reverse('recipe:tag-detail', args=[tag_id])
@@ -30,7 +31,7 @@ class PublicTagsAPITests(TestCase):
     """Test unauthenticated API requests"""
     def setUp(self):
         self.client = APIClient()
-    
+
     def test_auth_required(self):
         """Test auth is required for retrieving tags"""
         res = self.client.get(TAGS_URL)
@@ -44,12 +45,12 @@ class PrivateTagsAPITests(TestCase):
         self.client = APIClient()
         self.user = create_user()
         self.client.force_authenticate(self.user)
-    
+
     def test_retrieve_tags(self):
         """Test retrieving a list of tags"""
-        Tag.objects.create(user=self.user,name='SampleTag1')
-        Tag.objects.create(user=self.user,name='SampleTag2')
-        
+        Tag.objects.create(user=self.user, name='SampleTag1')
+        Tag.objects.create(user=self.user, name='SampleTag2')
+
         res = self.client.get(TAGS_URL)
 
         tags = Tag.objects.all().order_by('-name')
@@ -57,7 +58,7 @@ class PrivateTagsAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, serializer.data)
-    
+
     def test_tags_limited_to_user(self):
         """Test list of tags is limited to authenticated user"""
         other_user = create_user(email='user2@example.com')
@@ -67,7 +68,7 @@ class PrivateTagsAPITests(TestCase):
         tag = Tag.objects.get(user=self.user)
 
         res = self.client.get(TAGS_URL)
-        
+
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], tag.name)
@@ -77,7 +78,7 @@ class PrivateTagsAPITests(TestCase):
         """Test updating a tag"""
         tag = Tag.objects.create(user=self.user, name='SampleTag1234')
 
-        payload = {'name':'NewTagName'}
+        payload = {'name': 'NewTagName'}
         url = detail_url(tag.id)
         res = self.client.patch(url, payload)
 
