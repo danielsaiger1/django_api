@@ -263,7 +263,7 @@ class PrivateRecipeAPITests(TestCase):
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
-        self.assertEqual(res.status_code, status.HTTP_200_ok)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         new_tag = Tag.objects.get(user=self.user, name='Lunch')
         self.assertIn(new_tag, recipe.tags.all())
 
@@ -274,7 +274,9 @@ class PrivateRecipeAPITests(TestCase):
         recipe.tags.add(tag_breakfast)
 
         tag_lunch = Tag.objects.create(user=self.user, name='Lunch')
-        payload = {'tags': [{'name': 'Lunch' }]}  # changing the breakfast tag to lunch
+        payload = {
+            'tags': [{'name': 'Lunch'}]
+        }  # changing the breakfast tag to lunch
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
@@ -292,5 +294,5 @@ class PrivateRecipeAPITests(TestCase):
         url = detail_url(recipe.id)
         res = self.client.patch(url, payload, format='json')
 
-        self.assertEqual(res.status_code, status.HTTP_200_ok)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.tags.count(), 0)
