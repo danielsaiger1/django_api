@@ -2,6 +2,10 @@
 Tests for recipe APIs.
 """
 from decimal import Decimal
+import tempfile
+import os
+
+from PIL import image
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -28,6 +32,11 @@ RECIPES_URL = reverse('recipe:recipe-list')
 def detail_url(recipe_id):
     """Create and return a recipe detail url"""
     return reverse('recipe:recipe-detail', args=[recipe_id])
+
+
+def image_upload_url(recipe_id):
+    """Create and return an image upload URL"""
+    return reverse('recipe:recipe-upload-image', args=[recipe_id])
 
 
 def test_create_recipe(user, **params):
@@ -372,7 +381,7 @@ class PrivateRecipeAPITests(TestCase):
         self.assertIn(ingredient2, recipe.ingredients.all())
         self.assertNotIn(ingredient1, recipe.ingredients.all())
 
-    def clear_recipe_ingredients(self):
+    def test_clear_recipe_ingredients(self):
         """Test clearing a recipes ingredients"""
         ingredient = Ingredient.objects.create(user=self.user, name='Pepper')
         recipe = test_create_recipe(user=self.user)
@@ -384,3 +393,20 @@ class PrivateRecipeAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.ingredients.count(), 0)
+
+
+class ImageUploadTests(TestCase):
+    """Tests for the image upload API"""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            'user@example.com',
+            'pass123'
+        )
+
+        self.client.force_authenticate(self.user)
+        self.recipe = test_create_recipe(user=self.user)
+    
+    def tearDown(self):
+        self.recipe.image.delete()
