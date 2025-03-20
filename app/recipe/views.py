@@ -3,7 +3,7 @@ Views for the recipe APIs
 """
 from drf_spectacular.utils import (
     extend_schema_view,
-    exten_schema,
+    extend_schema,
     OpenApiParameter,
     OpenApiTypes,
 )
