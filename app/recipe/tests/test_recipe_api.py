@@ -394,6 +394,50 @@ class PrivateRecipeAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(recipe.ingredients.count(), 0)
 
+    def test_filter_by_tags(self):
+        """Test filtering recipes by tags"""
+        r1 = test_create_recipe(user=self.user, title='Lentils')
+        r2 = test_create_recipe(user=self.user, title='Pasta')
+        tag1 = Tag.objects.create(user=self.user, name='Vegan')
+        tag2 = Tag.objects.create(user=self.user, name='German')
+        r1.tags.add(tag1)
+        r2.tags.add(tag2)
+        r3 = test_create_recipe(user=self.user, title='Schnitzel')
+
+        params = {'tags': f'{tag1.id},{tag2.id}'}
+        res = self.client.get(RECIPES_URL, params)
+
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
+    def test_filter_by_ingredients(self):
+        """Test filtering recipes by ingredients"""
+        r1 = test_create_recipe(user=self.user, title='Lentils')
+        r2 = test_create_recipe(user=self.user, title='Bolognese')
+        i1 = Ingredient.objects.create(user=self.user, name='Beef Broth')
+        i2 = Ingredient.objects.create(user=self.user, name='Minced Meat')
+        r1.ingredients.add(i1)
+        r2.ingredients.add(i2)
+        r3= test_create_recipe(user=self.user, title='Ceasar Salad')
+
+        params = {'ingredients': f'{i1.id}, {i2.id}'}
+        res = self.client.get(RECIPES_URL, params)
+
+        s1 = RecipeSerializer(r1)
+        s2 = RecipeSerializer(r2)
+        s3 = RecipeSerializer(r3)
+
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn(s1.data, res.data)
+        self.assertIn(s2.data, res.data)
+        self.assertNotIn(s3.data, res.data)
+
 
 class ImageUploadTests(TestCase):
     """Tests for the image upload API"""
