@@ -119,7 +119,7 @@ class PrivateIngredientAPITests(TestCase):
 
         s1 = IngredientSerializer(in1)
         s2 = IngredientSerializer(in2)
-        
+
         self.assertIn(s1.data, res.data)
         self.assertNotIn(s2.data, res.data)
 
