@@ -1,0 +1,9 @@
+<h1>Hello World</h1>
+<h1>API Daten:</h1>
+<ul>
+    {% for item in data %}
+        <li>{{item}}</li> 
+    {% empty %}
+        <li>Keine Daten verfügbar.</li>
+    {% endfor %}
+</ul>

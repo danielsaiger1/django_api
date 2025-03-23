@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+import app.views as views
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -33,7 +33,8 @@ urlpatterns = [
         name='api-docs',
     ),
     path('api/user/', include('user.urls')),
-    path('api/recipe/', include('recipe.urls'))
+    path('api/recipe/', include('recipe.urls')),
+    path('home', views.home, name='home'),
 ]
 
 if settings.DEBUG:
