@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
-    path('', TemplateView.as_view(template_name="home.html"), name="home"),
+    path('', TemplateView.as_view(template_name='home.html'), name="home"),
     path("accounts/", include("django.contrib.auth.urls")),
 ]
 
