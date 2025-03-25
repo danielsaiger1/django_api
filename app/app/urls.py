@@ -18,7 +18,7 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from django.contrib import admin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
@@ -34,8 +34,8 @@ urlpatterns = [
     ),
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name="home"),
     path("accounts/", include("django.contrib.auth.urls")),
+    path('', TemplateView.as_view(template_name='home.html'), name="home"),
 ]
 
 if settings.DEBUG:
