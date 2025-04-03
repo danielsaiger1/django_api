@@ -18,11 +18,11 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from django.contrib import admin
-from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic.base import TemplateView
+import app.views as app_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema', SpectacularAPIView.as_view(), name='api-schema'),
@@ -34,7 +34,8 @@ urlpatterns = [
     path('api/user/', include('user.urls')),
     path('api/recipe/', include('recipe.urls')),
     path('accounts/', include("django.contrib.auth.urls")),
-    path('', TemplateView.as_view(template_name='home.html'), name="home"),
+    #path('', TemplateView.as_view(template_name='home.html'), name="home"),
+    path('', app_views.home, name="home"),
 ]
 
 if settings.DEBUG:
