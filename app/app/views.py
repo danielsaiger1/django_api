@@ -14,9 +14,8 @@ from core.models import Recipe, Tag, Ingredient
 
 def home(request):
     token = request.user.auth_token.key if hasattr(request.user, 'auth_token') else None
-
     api_url = "http://127.0.0.1:8000/api/recipe/recipes"
-    print(token)
+
     headers = {'Authorization': f"Token {token}"}
     response = requests.get(api_url, headers=headers)
     
